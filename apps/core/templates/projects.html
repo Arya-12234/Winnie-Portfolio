@@ -1,0 +1,47 @@
+{% load static %}
+
+<section id="projects">
+    <h2 class="title" style="background-color: #add4d9; margin-bottom: 0rem; color: black; text-align: center">Projects</h2>
+    <div class="projects container" style="background-color: #208c81">
+        <div class="project-card" onclick="redirectTo('https://github.com/Arya-12234')">
+            <h3>Smart Home</h3>
+            <p>Developed a smart home automation system integrating IoT devices for seamless control</p>
+            <div class="Icons">
+                <img src="{% static 'img/django.png' %}" alt="" />
+                <img src="{% static 'img/python.png' %}" alt="" />
+                <img src="{% static 'img/html (1).png' %}" alt="" />
+                <img src="{% static 'img/js.png' %}" alt="" />
+                <img src="{% static 'img/files.png' %}" alt="" />
+            </div>
+        </div>
+        <div class="project-card" onclick="redirectTo('https://github.com/Arya-12234')">
+            <h3>Data Analysis</h3>
+            <p>Analyzed employee data using advanced data analysis techniques</p>
+            <div class="Icons">
+                <img src="{% static 'img/python.png' %}" alt="" />
+                <img src="{% static 'img/diagram.png' %}" alt="" />
+            </div>
+        </div>
+        <div class="project-card" onclick="redirectTo(' ')">
+            <h3>Weather App</h3>
+            <p>The weather app delivers real time weather updates and forecasts</p>
+            <div class="Icons">
+                <img src="{% static 'img/js.png' %}" alt="" />
+                <img src="{% static '/img/html (1).png' %}" alt="" />
+                <img src="{% static 'img/files.png' %}" alt="" />
+            </div>
+        </div>
+        <div class="project-card" onclick="redirectTo(' ')">
+            <h3>Machine Learning</h3>
+            <p>The project uses machine learning algorithms to predict house prices based on various features like location, size and amenities</p>
+            <div class="Icons">
+                <img src="{% static 'img/python.png' %}" alt="" />
+            </div>
+            <script>
+                function redirectTo(url) {
+                    window.open(url, "_blank"); // Opens link in a new tab
+                }
+            </script>
+        </div>
+    </div>
+</section>

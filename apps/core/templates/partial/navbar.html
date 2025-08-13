@@ -1,0 +1,26 @@
+{% load static %}
+
+<header id="header" class="header d-flex align-items-center fixed-top">
+  <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+    <!-- Logo -->
+    <a href="index.html" class="logo d-flex align-items-center">
+      <div class="logo">
+        <img src="{% static 'img/winnie-logo.png' %}" alt="" style="object-fit: cover; ">
+      </div>
+    </a>
+
+    <!-- Navigation Menu -->
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="#index" class="active">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <!-- Mobile Toggle Button -->
+      <i class="mobile-nav-toggle d-xl-none bi bi-list" onclick="toggleMobileNav()"></i>
+    </nav>
+  </div>
+</header>

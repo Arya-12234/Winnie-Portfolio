@@ -1,0 +1,60 @@
+{% extends 'base.html' %} {% block content %}
+
+<!-- Add the script to handle mobile nav toggle -->
+<script>
+    function toggleMobileNav() {
+        document.body.classList.toggle("mobile-nav-active");
+        const mobileNavToggleBtn = document.querySelector(".mobile-nav-toggle");
+        const navmenu = document.querySelector("#navmenu");
+
+        // Toggle the hamburger and close icon
+        mobileNavToggleBtn.classList.toggle("bi-list");
+        mobileNavToggleBtn.classList.toggle("bi-x");
+
+        // Show or hide the nav menu based on the active class
+        if (document.body.classList.contains("mobile-nav-active")) {
+            navmenu.style.display = "block"; // Show the navmenu when active
+        } else {
+            navmenu.style.display = "none"; // Hide the navmenu when inactive
+        }
+    }
+
+    // Hide the mobile nav when clicking a link
+    document.querySelectorAll("#navmenu a").forEach((navLink) => {
+        navLink.addEventListener("click", () => {
+            if (document.body.classList.contains("mobile-nav-active")) {
+                document.body.classList.remove("mobile-nav-active");
+                const mobileNavToggleBtn = document.querySelector(".mobile-nav-toggle");
+                mobileNavToggleBtn.classList.toggle("bi-list");
+                mobileNavToggleBtn.classList.toggle("bi-x");
+            }
+        });
+    });
+</script>
+
+<main class="main" style="padding-top: 80px">
+    <!-- Hero Section -->
+    <section id="hero" class="hero section" style="background-color: #208c81">
+        <div class="container" data-aos="zoom-out" data-aos-delay="100">
+            <h1>Hello, I'm</h1>
+            <h2>Winnie Mutheu</h2>
+            <p>I'm <span class="typed" data-typed-items="Software Engineer, Data Scientist, Web Developer, Data Analyst, Business Analyst">Software Engineer</span><span class="typed-cursor typed-cursor--blink"></span></p>
+            <button class="cv-btn">Download CV</button>
+        </div>
+
+        <!-- </section> -->
+    </section>
+    <!-- /Hero Section -->
+
+    {% include 'about.html' %} {% include 'stats.html' %} {% include 'skills.html' %} {% include 'interests.html' %}
+</main>
+
+{% include 'services.html' %} {% include 'experience.html' %} {% include 'projects.html' %} {% include 'contact.html' %}
+
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Preloader -->
+<div id="preloader"></div>
+
+{% endblock content %}
