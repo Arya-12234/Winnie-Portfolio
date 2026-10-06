@@ -214,44 +214,34 @@
    */
   function toggleScrolled() {
     const selectHeader = document.querySelector('#header');
-    if (!selectHeader || (selectHeader.classList.contains('scroll-up-sticky') || selectHeader.classList.contains('sticky-top') || selectHeader.classList.contains('fixed-top'))) return;
+    if (!selectHeader || (!selectHeader.classList.contains('scroll-up-sticky') && !selectHeader.classList.contains('sticky-top') && !selectHeader.classList.contains('fixed-top'))) return;
     window.scrollY > 100 ? body.classList.add('scrolled') : body.classList.remove('scrolled');
   }
-/**
- * Mobile nav toggle
- */
+
 const mobileNavToggleBtn = document.querySelector('.mobile-nav-toggle');
-const navmenu = document.querySelector('.navmenu'); // Ensure navmenu is correctly targeted
 
-function toggleMobileNav() {
-  // Use document.body directly instead of redeclaring 'body'
-  document.body.classList.toggle('mobile-nav-active');  
-  mobileNavToggleBtn.classList.toggle('bi-list');
-  mobileNavToggleBtn.classList.toggle('bi-x');
-
-  // Show or hide the nav menu based on the active class
-  if (document.body.classList.contains('mobile-nav-active')) {
-    navmenu.style.display = 'block';  // Show the navmenu when active
-  } else {
-    navmenu.style.display = 'none';  // Hide the navmenu when inactive
+function setMobileNavOpen(isOpen) {
+  document.body.classList.toggle('mobile-nav-active', isOpen);
+  if (!mobileNavToggleBtn) return;
+  const icon = mobileNavToggleBtn.querySelector('i');
+  if (icon) {
+    icon.classList.toggle('bi-list', !isOpen);
+    icon.classList.toggle('bi-x', isOpen);
   }
+  mobileNavToggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  mobileNavToggleBtn.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
 }
 
 if (mobileNavToggleBtn) {
-  mobileNavToggleBtn.addEventListener('click', toggleMobileNav);
+  mobileNavToggleBtn.addEventListener('click', () => {
+    setMobileNavOpen(!document.body.classList.contains('mobile-nav-active'));
+  });
 }
 
-/**
- * Hide mobile nav on same-page/hash links
- */
-document.querySelectorAll('#navmenu a').forEach(navmenu => {
-  navmenu.addEventListener('click', () => {
+document.querySelectorAll('#navmenu a').forEach((navLink) => {
+  navLink.addEventListener('click', () => {
     if (document.body.classList.contains('mobile-nav-active')) {
-      document.body.classList.remove('mobile-nav-active');
-      if (mobileNavToggleBtn) {
-        mobileNavToggleBtn.classList.toggle('bi-list');
-        mobileNavToggleBtn.classList.toggle('bi-x');
-      }
+      setMobileNavOpen(false);
     }
   });
 });

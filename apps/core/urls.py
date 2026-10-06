@@ -3,5 +3,5 @@ from django.urls import path
 
 urlpatterns = [
     path("", index),
-    path("contact", contact),
+    path("contact", contact, name="contact"),
 ]

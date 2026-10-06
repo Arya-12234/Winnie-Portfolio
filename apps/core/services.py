@@ -1,9 +1,26 @@
-from django.core.mail import send_mail, EmailMultiAlternatives
+import re
+
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.utils.html import escape
 from datetime import datetime
 
+
+def _header_value(value):
+    return re.sub(r"[\r\n]+", " ", str(value or "")).strip()
+
+
 def send_contact_email(name, email, subject, message):
-    formatted_message = message.replace('\n', '<br>')
+    safe_name = _header_value(name)
+    safe_email = _header_value(email)
+    safe_subject = _header_value(subject)
+    from_email = settings.DEFAULT_FROM_EMAIL
+    recipient = settings.PERSONAL_EMAIL
+
+    if not from_email or not recipient:
+        raise RuntimeError("Email settings are incomplete")
+
+    html_message = escape(message or "").replace("\n", "<br>")
     current_year = datetime.now().year
 
     html_content = f"""
@@ -17,21 +34,21 @@ def send_contact_email(name, email, subject, message):
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 2rem;">
                 <tr>
                     <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; width: 100px; color: #64748b; font-weight: 500;">From</td>
-                    <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #0f172a;">{name} <span style="font-size: 0.875rem; color: #64748b;">({email})</span></td>
+                    <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #0f172a;">{escape(safe_name)} <span style="font-size: 0.875rem; color: #64748b;">({escape(safe_email)})</span></td>
                 </tr>
                 <tr>
                     <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #64748b; font-weight: 500;">Subject</td>
-                    <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #0f172a;">{subject}</td>
+                    <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #0f172a;">{escape(safe_subject)}</td>
                 </tr>
             </table>
 
             <div style="background-color: #f8fafc; padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 2rem;">
                 <h3 style="color: #1e293b; font-size: 1.1rem; margin-top: 0; margin-bottom: 1rem; font-weight: 500;">Message</h3>
-                <div style="color: #334155; line-height: 1.7; white-space: pre-wrap;">{formatted_message}</div>
+                <div style="color: #334155; line-height: 1.7;">{html_message}</div>
             </div>
 
             <div style="text-align: center; margin-top: 2.5rem;">
-                <a href="mailto:{email}" style="display: inline-block; background-color: #6366f1; color: white; text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 0.375rem; font-weight: 500; font-size: 0.95rem;">Reply to {name}</a>
+                <a href="mailto:{escape(safe_email)}" style="display: inline-block; background-color: #6366f1; color: white; text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 0.375rem; font-weight: 500; font-size: 0.95rem;">Reply to {escape(safe_name)}</a>
             </div>
         </div>
 
@@ -41,14 +58,16 @@ def send_contact_email(name, email, subject, message):
     </div>
     """
 
-    subject_line = f"New Contact: {subject}"
-    text_content = f"Name: {name}\nEmail: {email}\nSubject: {subject}\n\nMessage:\n{message}"
+    text_content = (
+        f"Name: {safe_name}\nEmail: {safe_email}\nSubject: {safe_subject}\n\nMessage:\n{message}"
+    )
 
     email_msg = EmailMultiAlternatives(
-        subject=subject_line,
+        subject=f"New Contact: {safe_subject}",
         body=text_content,
-        from_email=email,
-        to=[settings.PERSONAL_EMAIL]
+        from_email=from_email,
+        to=[recipient],
+        reply_to=[safe_email],
     )
     email_msg.attach_alternative(html_content, "text/html")
     email_msg.send()
